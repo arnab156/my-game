@@ -26,6 +26,7 @@ class App extends Component {
           this.gameOver();
         }
       }
+      return console.log(o,i);
     });
   };
 
