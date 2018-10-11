@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import "./App.css";
 import images from "./images.json";
 import ImageCards from "./ImageCards";
+// import Wrapper from "./Wrapper";
+import Header from "./Header";
 
 class App extends Component {
   state = {
@@ -9,27 +11,37 @@ class App extends Component {
     score: 0,
     highscore: 0
   };
-  
 
   arrangeImageRandom = id => {
     this.state.images.find((o, i) => {
       if (o.id === id) {
-        if(images[i].count === 0){
+        if (images[i].count === 0) {
           images[i].count = images[i].count + 1;
-          this.setState({score : this.state.score + 1}, function(){
+          this.setState({ score: this.state.score + 1 }, function() {
             console.log(this.state.score);
           });
-          this.state.images.sort(() => Math.random() - 0.5)
-          return true; 
+          this.state.images.sort(() => Math.random() - 0.5);
+          return true;
         } else {
           this.gameOver();
         }
       }
     });
-  }
+  };
 
-
-
+  gameOver = () => {
+    if (this.state.score > this.state.highscore) {
+      this.setState({ highscore: this.state.score }, function() {
+        console.log(this.state.highscore);
+      });
+    }
+    this.state.images.forEach(image => {
+      image.count = 0;
+    });
+    alert(`Game Over :( \nscore: ${this.state.score}`);
+    this.setState({ score: 0 });
+    return true;
+  };
 
   // arrangeImageRandom = id => {
   //   //1. if image is already clicked
@@ -42,7 +54,6 @@ class App extends Component {
   //   // selectedArray.push(id);
   //   // console.log (selectedArray);
 
-
   //   // console.log("line 26 in app js", this.state.images[id]);
   //   for (let i = images.length - 1; i > 0; i--) {
   //     const j = Math.floor(Math.random() * (i + 1));
@@ -52,33 +63,13 @@ class App extends Component {
   //   console.log("randomly sorted", images);
   // };
 
-
   render() {
     return (
       <div className="container-fluid">
-        <div className="row">
-          <div className="col-sm">Clicky Game!</div>
-          <div className="col-sm">
-            <p> Click on an Image to start playing!</p>
-          </div>
-          <div className="col-sm">
-            <p>
-              {" "}
-              Your Score: <span>{2 + 1} </span> Top Score:
-              <span>{5 + 11} </span>
-            </p>
-          </div>
-        </div>
-        <div
-          className="jumbotron jumbotron-fluid text-center newBackground"
-          styleName="back"
-        >
-          <h1> Memory Game</h1>{" "}
-          <p>
-            Click on an image to earn points, but don't click on any more than
-            once!
-          </p>
-        </div>
+        <Header score={this.state.score} highscore={this.state.highscore}>
+          Clicky Memory Game
+        </Header>
+
         {/* <ImageCards id={images[1].id} image={images[1].image} arrangeImageRandom={this.arrangeImageRandom} /> */}
         <div className="row">
           {this.state.images.map(image => (
